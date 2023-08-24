@@ -1,0 +1,16 @@
+[Unit]
+Description=IoT Project Startup Script
+After=network.target mosquitto.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/home/debian/iot_project
+ExecStart=/home/debian/iot_project/startup_script.sh
+Restart=no
+User=debian
+Group=debian
+
+[Install]
+WantedBy=multi-user.target
+
