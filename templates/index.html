@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IOT Project</title>
+</head>
+<body>
+    <h2>Light Data</h2>
+    <form action="/" method="post">
+        <label for="threshold">Threshold:</label>
+        <input type="text" id="threshold" name="threshold" value="{{ threshold.value }}">
+        <input type="submit" value="Update">
+    </form>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody id="data-table">
+            {% for entry in data %}
+            <tr>
+                <td>{{ entry.timestamp }}</td>
+                <td>{{ entry.value }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        setInterval(() => {
+            fetch('/latest-data')
+            .then(response => response.json())
+            .then(data => {
+                if(data.timestamp && data.value) {
+                    let table = document.getElementById('data-table');
+                    // Remove the last row
+                    table.deleteRow(-1);
+
+                    // Add new data to the beginning
+                    let newRow = table.insertRow(0);
+                    let timestampCell = newRow.insertCell(0);
+                    let valueCell = newRow.insertCell(1);
+                    timestampCell.textContent = data.timestamp;
+                    valueCell.textContent = data.value;
+                }
+            })
+            .catch(error => console.error('Error fetching the latest data:', error));
+        }, 2000);
+    </script>
+</body>
+</html>
+
