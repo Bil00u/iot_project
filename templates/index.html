@@ -1,28 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    <!-- Metadata to specify character encoding -->
     <meta charset="UTF-8">
+    <!-- Metadata to ensure proper rendering and touch zooming on mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Title of the web page -->
     <title>IOT Project</title>
 </head>
+
 <body>
+
+    <!-- Heading for the light data section -->
     <h2>Light Data</h2>
+
+    <!-- Form to update the light threshold -->
     <form action="/" method="post">
+        <!-- Label for the threshold input field -->
         <label for="threshold">Threshold:</label>
+        <!-- Input field for updating the threshold, pre-filled with the current threshold value -->
         <input type="text" id="threshold" name="threshold" value="{{ threshold.value }}">
+        <!-- Submit button to post the form data -->
         <input type="submit" value="Update">
     </form>
 
+    <!-- Table to display light data -->
     <table border="1">
         <thead>
+            <!-- Table header row -->
             <tr>
                 <th>Timestamp</th>
                 <th>Value</th>
             </tr>
         </thead>
         <tbody id="data-table">
+            <!-- Loop to display each entry in the light data -->
             {% for entry in data %}
             <tr>
+                <!-- Display timestamp and value for each entry -->
                 <td>{{ entry.timestamp }}</td>
                 <td>{{ entry.value }}</td>
             </tr>
@@ -30,8 +46,10 @@
         </tbody>
     </table>
 
+    <!-- JavaScript to update the table every 2 secs -->
     <script>
         setInterval(() => {
+            // Fetch the latest light data
             fetch('/latest-data')
             .then(response => response.json())
             .then(data => {
@@ -40,7 +58,7 @@
                     // Remove the last row
                     table.deleteRow(-1);
 
-                    // Add new data to the beginning
+                    // Add new data to the beginning of the table
                     let newRow = table.insertRow(0);
                     let timestampCell = newRow.insertCell(0);
                     let valueCell = newRow.insertCell(1);
@@ -48,9 +66,11 @@
                     valueCell.textContent = data.value;
                 }
             })
+            // Catch and log any errors during fetch
             .catch(error => console.error('Error fetching the latest data:', error));
-        }, 2000);
+        }, 2000); // Refresh interval set to 2 seconds
     </script>
+
 </body>
 </html>
 
